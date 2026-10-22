@@ -16,3 +16,15 @@ npm run dev
 ```
 
 開啟 http://localhost:3000
+
+## 本機測試用的 API Key（選用）
+
+在專案根目錄建立 `.env.local`，內容：
+
+```
+OPENAI_API_KEY=你的key
+```
+
+- 只在 `npm run dev` 時生效，頁面上的 Key 欄位可以留空
+- `.env.local` 已被 `.gitignore` 排除，**不會上傳到 GitHub**
+- 部署到 Vercel 後這個設定完全不生效，網站維持 BYOK；**請勿在 Vercel 設定 OPENAI_API_KEY**

@@ -10,6 +10,9 @@ const DIFFICULTIES = [
   { value: "senior", label: "進階" },
 ];
 
+// 本機開發時允許不填 Key，後端會改用 .env.local 的 OPENAI_API_KEY；部署後一定要填
+const IS_DEV = process.env.NODE_ENV === "development";
+
 async function callApi(apiKey: string, payload: Record<string, string>) {
   const res = await fetch("/api/interview", {
     method: "POST",
@@ -105,6 +108,11 @@ export default function Home() {
             <p className="text-xs text-zinc-500">
               本網站採用「使用者自備 API Key」模式。Key 只存在這個頁面的記憶體中，重新整理就會清除，伺服器不會儲存。
             </p>
+            {IS_DEV && (
+              <p className="text-xs text-amber-600">
+                本機開發模式：留空會使用 .env.local 裡的 OPENAI_API_KEY（只在你的電腦有效，部署後不會生效）。
+              </p>
+            )}
           </div>
 
           <div className="space-y-1">
@@ -142,7 +150,7 @@ export default function Home() {
 
           <button
             onClick={generateQuestions}
-            disabled={loading || !apiKey || !job.trim()}
+            disabled={loading || (!apiKey && !IS_DEV) || !job.trim()}
             className={`${buttonClass} w-full`}
           >
             {loading && questions.length === 0 ? "AI 出題中…" : "產生面試題目"}

@@ -26,8 +26,14 @@ type FeedbackBody = {
   answer: string;
 };
 
+// 本機開發時（npm run dev）可以把自己的 Key 放在 .env.local 方便測試。
+// .env.local 已被 .gitignore 排除，不會上傳 GitHub；
+// 部署到 Vercel 後 NODE_ENV 是 production，這段永遠不會生效，網站維持純 BYOK。
+const LOCAL_DEV_KEY =
+  process.env.NODE_ENV === "development" ? process.env.OPENAI_API_KEY?.trim() : undefined;
+
 export async function POST(request: Request) {
-  const apiKey = request.headers.get("x-openai-key")?.trim();
+  const apiKey = request.headers.get("x-openai-key")?.trim() || LOCAL_DEV_KEY;
   if (!apiKey) {
     return Response.json({ error: "請先輸入你的 OpenAI API Key。" }, { status: 400 });
   }
